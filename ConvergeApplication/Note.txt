@@ -1,0 +1,6 @@
+#Contained within this file are the tools and resources that are needed to create 
+#Converge's Application Form (For web) for web-based application process
+
+The project will be using this techstack:
+-MySQL : Serves as the database for the application Form
+-Trinity : HTML, CSS, and Javascript for creating the front-end and back-end for the web-based application form
