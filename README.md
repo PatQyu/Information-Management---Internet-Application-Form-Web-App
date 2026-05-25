@@ -12,7 +12,7 @@ A web-app focused on simulating an internet service provider's (ISP) application
 - **Backend:** Flask
 - **Version Control:** Git & GitHub
 
-## 👥 Contributors
+## Contributors
 - **Patrick DC. Quitoriano** (Leader)
 - **Johnry S. Cabale**
 - **Patrick John C. Castillo**
