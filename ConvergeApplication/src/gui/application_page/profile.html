@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Converge Dashboard | Applicant Profile</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+
+    <div id="statusBanner" class="status-banner banner-pending">
+        <h2 id="statusMessage">Checking application status...</h2>
+    </div>
+
+    <div class="dashboard-container">
+        
+        <div class="dashboard-header">
+            <div>
+                <h1 id="displayName">Welcome, Applicant</h1>
+                <p>Application ID: <strong id="displayId">APP-LOADING</strong></p>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()">Log Out</button>
+        </div>
+
+        <div class="dashboard-grid">
+            
+            <div class="column">
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Contact Details</h2>
+                        <button id="editBtn" class="btn btn-text">Edit</button>
+                    </div>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label>Primary Contact No.</label>
+                            <input type="tel" id="update_contactNo" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label>Secondary Contact No.</label>
+                            <input type="tel" id="update_secondaryContactNo" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Primary Email</label>
+                            <input type="email" id="update_email" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label>Secondary Email</label>
+                            <input type="email" id="update_secondaryEmail" readonly>
+                        </div>
+                        <button type="submit" id="saveBtn" class="btn btn-primary hidden">Save Changes</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Plan Overview</h2>
+                        <span id="displayAppType" class="badge">Loading Type</span>
+                    </div>
+                    <div class="plan-details">
+                        <div class="plan-header-info">
+                            <h3 id="displayPlanName">Loading Plan...</h3>
+                            <p id="displayPlanSpeed" class="plan-speed">Speed: --</p>
+                        </div>
+                        
+                        <hr class="divider">
+                        
+                        <div class="plan-summary-grid">
+                            <div class="summary-item">
+                                <span class="summary-label">Cable Add-on</span>
+                                <span id="displayCable" class="summary-value">--</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Public IP</span>
+                                <span id="displayIp" class="summary-value">--</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Installation Fee</span>
+                                <span id="displayInstall" class="summary-value">--</span>
+                            </div>
+                        </div>
+                        
+                        <hr class="divider">
+                        
+                        <div class="summary-total">
+                            <span class="total-label">Monthly Service Fee</span>
+                            <span id="displayMonthlyFee" class="total-value">₱ --</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column">
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Requirement Uploads</h2>
+                    </div>
+                    
+                    <form id="uploadForm" class="upload-area">
+                        <div id="uploadInstructions" style="font-size: 0.85rem; color: #555; margin-bottom: 15px;"></div>
+                        <div class="form-group">
+
+                            <label>Select Document Type</label>
+                            <select id="docTypeSelect" required>
+                                <option value="" disabled selected>-- Select Requirement --</option>
+                                <option value="Valid Government ID">Valid Government ID</option>
+                                <option value="Proof of Billing">Proof of Billing</option>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="file" id="fileInput" accept=".pdf, .jpg, .png, .jpeg" required>
+                        </div>
+                        <button type="submit" id="uploadBtn" class="btn btn-primary">Upload Document</button>
+                    </form>
+
+                    <div class="uploaded-vault">
+                        <h3>Uploaded Documents</h3>
+                        <ul id="uploadedList" class="document-list">
+                            <li class="empty-state">Loading your documents...</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card card-danger">
+                    <h2>Cancel Application</h2>
+                    <p>If you no longer wish to proceed, you can cancel your application here. This action cannot be undone.</p>
+                    <button id="deleteBtn" class="btn btn-danger">Cancel Application</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="profile.js"></script>
+</body>
+</html>

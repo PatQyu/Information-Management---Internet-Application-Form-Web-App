@@ -1,30 +1,27 @@
-from flask import Flask,jsonify
-import mysql.connector, request, jsonify
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import mysql.connector
+import os                                      
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+CORS(app)
+
+UPLOAD_FOLDER = 'documents' 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 #connector
-con = mysql.connector.connect(
+db = mysql.connector.connect(
     host='localhost',
     user='root',
     password='DLq28@03LjpDQ2005!LjM',
     database='converge_application'
 )
-
-#Try
-#def get_tables():
-    #cursor = con.cursor()
-    #cursor.execute("SHOW TABLES;")
-    #tables = cursor.fetchall()
-    #cursor.close
-    #con.close()
-    #table_names=[table[0] for table in tables] 
-    #return jsonify({"tables":table_names}),200
-
-#if __name__ == "__main__":
-    #print("connecting to DB")
-    #app.run(debug=True)
-
 
 #login
 @app.route('/login', methods = ['POST'])
@@ -103,7 +100,7 @@ def application():
         sql_find_plan = """
             SELECT plan_ID FROM internet_plans 
             WHERE plan_name = %s AND plan_type = %s AND plan_speed = %s 
-            AND plan_cableAddOn = %s AND plan_publicIP = %s AND plan_installationFee = %s
+            AND plan_cableAddOn <=> %s AND plan_publicIP = %s AND plan_installationFee = %s
         """
         cursor.execute(sql_find_plan, (user_plan_name, user_plan_type, user_plan_speed, user_plan_cableAddOn, user_plan_publicIP, user_plan_installationFee))
         plan_record = cursor.fetchone()
@@ -119,7 +116,7 @@ def application():
                 app_secondaryContactNo, app_emailAddress, app_secondaryEmailAddress, 
                 app_serviceOwnership, app_companyPaid, app_yearsOfResidency, 
                 app_lessorOwner, app_lessorOwnerContactNo, app_address, plan_ID
-            ) VALUES (%s, DATE_FORMAT(CURDATE(), '%m-%d-%Y'), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ) VALUES (%s, DATE_FORMAT(CURDATE(), '%Y-%m-%d'), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         cursor.execute(sql_insert_applicant, (
             user_app_type, user_app_name, user_app_gender, user_app_contactNo,
@@ -176,11 +173,11 @@ def is_application_complete(app_type, uploaded_docs):
     uploaded_set = set(uploaded_docs)
 
     if app_type == 0:
-        required_res = {'DOC-601', 'DOC-101', 'DOC-201', 'DOC-202', 'DOC-301'}
+        required_res = {'DOC-101', 'DOC-201', 'DOC-202', 'DOC-301', 'DOC-601'}
         return required_res.issubset(uploaded_set)
         
     elif app_type == 1:
-        base_req = {'DOC-102', 'DOC-103'}
+        base_req = {'DOC-102', 'DOC-103', 'DOC-601'}
         
         opt_1 = {'DOC-401', 'DOC-402'}
         opt_2 = {'DOC-401', 'DOC-403', 'DOC-404'}
@@ -205,9 +202,12 @@ def profile(app_id):
     try:
         if request.method == 'GET':
             sql_profile = """
-                SELECT a.app_name, a.app_type, a.app_ID, p.plan_ID, p.plan_name, 
-                       p.plan_type, p.plan_speed, p.plan_cableAddOn, 
-                       p.plan_publicIP, p.plan_installationFee, p.plan_monthlyServiceFee
+                SELECT a.app_name, a.app_type, a.app_ID, 
+                       a.app_contactNo, a.app_secondaryContactNo, 
+                       a.app_emailAddress, a.app_secondaryEmailAddress,
+                       p.plan_ID, p.plan_name, p.plan_type, p.plan_speed, 
+                       p.plan_cableAddOn, p.plan_publicIP, p.plan_installationFee, 
+                       p.plan_monthlyServiceFee
                 FROM applicant a
                 JOIN internet_plans p ON a.plan_ID = p.plan_ID
                 WHERE a.app_ID = %s
@@ -240,27 +240,42 @@ def profile(app_id):
                 "uploaded_documents": uploaded_files,
                 "application_complete": is_complete
             }), 200
-
+        
         elif request.method == 'POST':
-            data = request.json
-            doc_type = data.get('doc_type')
-            doc_path = data.get('doc_path')
-            
-            # First, find the doc_ID that matches the doc_type the user selected
-            cursor.execute("SELECT doc_ID FROM documents WHERE doc_type = %s", (doc_type,))
-            doc_record = cursor.fetchone()
-            
-            if not doc_record:
-                return jsonify({"status": "error", "message": "Invalid document type"}), 400
+            if 'file' not in request.files:
+                return jsonify({"status": "error", "message": "No file part sent."}), 400
                 
-            doc_id = doc_record['doc_ID']
+            file = request.files['file']
+        
+            frontend_doc_id = request.form.get('doc_type') 
             
-            # Insert into junction table
-            cursor.execute("INSERT INTO applicants_documents (app_ID, doc_ID, doc_path) VALUES (%s, %s, %s)", 
-                           (app_id, doc_id, doc_path))
-            db.commit()
-            return jsonify({"status": "success", "message": f"{doc_type} uploaded successfully!"}), 201
-
+            if file.filename == '':
+                return jsonify({"status": "error", "message": "No file selected."}), 400
+                
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                
+                user_folder = os.path.join(app.config['UPLOAD_FOLDER'], app_id)
+                os.makedirs(user_folder, exist_ok=True)
+                file_path = os.path.join(user_folder, filename)
+                file.save(file_path)
+                
+                cursor.execute("SELECT doc_type FROM documents WHERE doc_ID = %s", (frontend_doc_id,))
+                doc_record = cursor.fetchone()
+                
+                if not doc_record:
+                    os.remove(file_path) 
+                    return jsonify({"status": "error", "message": "Invalid document ID."}), 400
+                    
+                cursor.execute("INSERT INTO applicants_documents (app_ID, doc_ID, doc_path) VALUES (%s, %s, %s)", 
+                               (app_id, frontend_doc_id, file_path))
+                db.commit()
+                
+                real_doc_name = doc_record['doc_type']
+                return jsonify({"status": "success", "message": f"{real_doc_name} uploaded successfully!"}), 201
+            else:
+                return jsonify({"status": "error", "message": "Invalid file format. Please use PDF, JPG, or PNG."}), 400
+        
         elif request.method == 'PUT':
             data = request.json
             
@@ -303,3 +318,7 @@ def profile(app_id):
         
     finally:
         cursor.close()
+
+if __name__ == "__main__":
+    print("Connecting to DB and starting server on port 5000...")
+    app.run(debug=True)

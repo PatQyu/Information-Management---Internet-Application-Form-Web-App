@@ -1,0 +1,226 @@
+:root {
+    --converge-purple: #1A0D3F;
+    --converge-orange: #FF6B00;
+    --bg-gray: #F4F6F9;
+    --text-dark: #333333;
+    --border-color: #CCCCCC;
+    --success-green: #28a745;
+    --danger-red: #dc3545;
+    --warning-orange: #ffc107;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html { font-size: 100%; }
+
+body {
+    background-color: var(--bg-gray);
+    color: var(--text-dark);
+    min-height: 100vh;
+}
+
+/* 1. Status Banner */
+.status-banner {
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
+}
+.banner-pending { background-color: var(--warning-orange); color: #333; }
+.banner-success { background-color: var(--success-green); }
+
+/* 2. Layout & Containers */
+.dashboard-container {
+    max-width: 75rem; /* ~1200px wide */
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 0.125rem solid var(--border-color);
+}
+
+.dashboard-header h1 { color: var(--converge-purple); }
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* 3. Cards */
+.card {
+    background: #fff;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0.25rem 1rem rgba(0,0,0,0.05);
+    border-top: 0.25rem solid var(--converge-purple);
+}
+
+.card-danger { border-top-color: var(--danger-red); }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 0.0625rem solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.badge {
+    background: #eef;
+    color: var(--converge-purple);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+}
+
+/* 4. Forms & Inputs */
+.form-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================
+   7. Plan Overview Styling
+   ========================================= */
+.plan-header-info {
+    margin-bottom: 1rem;
+}
+
+.plan-speed {
+    color: var(--converge-orange);
+    font-weight: 600;
+    margin-top: 0.25rem;
+    font-size: 0.95rem;
+}
+
+.divider {
+    border: 0;
+    border-top: 1px solid var(--border-color);
+    margin: 1rem 0;
+    opacity: 0.5;
+}
+
+.plan-summary-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.summary-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.summary-value {
+    color: var(--text-dark);
+    font-weight: 600;
+    text-align: right;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fcfcfc;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    border: 1px dashed var(--border-color);
+}
+
+.total-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--converge-purple);
+}
+
+.total-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--converge-orange);
+}
+
+label { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.375rem; color: #555; }
+
+input, select {
+    padding: 0.625rem;
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+}
+
+/* Styling for "Locked" inputs */
+input[readonly] {
+    background-color: transparent;
+    border-color: transparent;
+    padding-left: 0;
+    color: #666;
+    font-weight: 500;
+}
+input[readonly]:focus { outline: none; }
+
+/* 5. Buttons */
+.btn {
+    padding: 0.625rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-primary { background: var(--converge-orange); color: white; width: 100%; }
+.btn-primary:hover { background: #E05E00; }
+.btn-secondary { background: #e0e0e0; color: #333; }
+.btn-text { background: transparent; color: var(--converge-orange); text-decoration: underline; padding: 0; }
+.btn-danger { background: var(--danger-red); color: white; margin-top: 1rem; }
+
+/* 6. Document Vault */
+.upload-area {
+    background: #fafafa;
+    border: 0.0625rem dashed var(--border-color);
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1.5rem;
+}
+
+.document-list { list-style: none; margin-top: 1rem; }
+.document-list li {
+    padding: 0.75rem;
+    background: #f9f9f9;
+    border-left: 0.25rem solid var(--converge-purple);
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+.empty-state { color: #888; font-style: italic; border-left: none !important; background: transparent !important; }
+
+.hidden { display: none !important; }
+
+/* Responsive */
+@media (max-width: 48rem) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
