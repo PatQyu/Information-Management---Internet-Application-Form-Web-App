@@ -42,14 +42,14 @@ const residentialPlans = [
         display: "Time of Day 1699 (Day 400Mbps / Night 200Mbps)",
         backend_name: "TIME OF DAY", 
         backend_type: "Time of Day 1699", 
-        backend_speed: "Day 400Mbps / Night 200Mbps" 
+        backend_speed: "D 400Mbps/N 200Mbps" 
     },
     { 
         id: "PL1202", 
         display: "Time of Day 3000 (Day 800Mbps / Night 600Mbps)",
         backend_name: "TIME OF DAY", 
         backend_type: "Time of Day 3000", 
-        backend_speed: "Day 800Mbps / Night 600Mbps" 
+        backend_speed: "D 800Mbps/N 600Mbps" 
     },
 
     // GAMECHANGER
@@ -122,42 +122,42 @@ const commercialPlans = [
         display: "flexiBIZ DAY 300 (Peak 300Mbps / Non 150Mbps)",
         backend_name: "flexiBIZ DAYTIME", 
         backend_type: "flexiBIZ DAY 300", 
-        backend_speed: "Peak 300Mbps / Non 150Mbps" 
+        backend_speed: "P 300Mbps/N 150Mbps" 
     },
     { 
         id: "PL2102", 
         display: "flexiBIZ DAY 200 (Peak 200Mbps / Non 100Mbps)",
         backend_name: "flexiBIZ DAYTIME", 
         backend_type: "flexiBIZ DAY 200", 
-        backend_speed: "Peak 200Mbps / Non 100Mbps" 
+        backend_speed: "P 200Mbps/N 100Mbps" 
     },
     { 
         id: "PL2103", 
         display: "flexiBIZ DAY 150 (Peak 150Mbps / Non 75Mbps)",
         backend_name: "flexiBIZ DAYTIME", 
         backend_type: "flexiBIZ DAY 150", 
-        backend_speed: "Peak 150Mbps / Non 75Mbps" 
+        backend_speed: "P 150Mbps/N 75Mbps" 
     },
     { 
         id: "PL2104", 
         display: "flexiBIZ DAY 120 (Peak 120Mbps / Non 60Mbps)",
         backend_name: "flexiBIZ DAYTIME", 
         backend_type: "flexiBIZ DAY 120", 
-        backend_speed: "Peak 120Mbps / Non 60Mbps" 
+        backend_speed: "P 120Mbps/N 60Mbps" 
     },
     { 
         id: "PL2105", 
         display: "flexiBIZ DAY 80 (Peak 80Mbps / Non 40Mbps)",
         backend_name: "flexiBIZ DAYTIME", 
         backend_type: "flexiBIZ DAY 80", 
-        backend_speed: "Peak 80Mbps / Non 40Mbps" 
+        backend_speed: "P 80Mbps/N 40Mbps" 
     },
     { 
         id: "PL2106", 
         display: "flexiBIZ DAY 50 (Peak 50Mbps / Non 25Mbps)",
         backend_name: "flexiBIZ DAYTIME", 
         backend_type: "flexiBIZ DAY 50", 
-        backend_speed: "Peak 50Mbps / Non 25Mbps" 
+        backend_speed: "P 50Mbps/N 25Mbps" 
     },
 
     // FLEXIBIZ PEAK
