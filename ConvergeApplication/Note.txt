@@ -9,6 +9,7 @@ How To Run the SETUP
 In Terminal
 -Open application.html (located in ConvergeApplication\src\gui\application_page)
 -Run it live on port 5500
+-Create a flask directory in the project and download the necessary dependencies and place it in backend folder
 -Change directory (cd) to yourpcdirectory/Information-Management---Internet-Application-Form-Web-App/ConvergeApplication/backend
 -Open /venv/Scripts/activate (Opens virtual environment)
 -Run python backend.py
