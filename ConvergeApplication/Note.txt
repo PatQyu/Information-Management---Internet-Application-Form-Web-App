@@ -4,3 +4,30 @@
 The project will be using this techstack:
 -MySQL : Serves as the database for the application Form
 -Trinity : HTML, CSS, and Javascript for creating the front-end and back-end for the web-based application form
+
+How To Run the SETUP
+In Terminal
+-Open application.html (located in ConvergeApplication\src\gui\application_page)
+-Run it live on port 5500
+-Change directory (cd) to yourpcdirectory/Information-Management---Internet-Application-Form-Web-App/ConvergeApplication/backend
+-Open /venv/Scripts/activate (Opens virtual environment)
+-Run python backend.py
+
+In Workbench
+-Open a connection with these attributes
+
+    host='localhost',
+    user='root',
+    password='12345',
+    database='converge_application'
+
+To change password, 
+-- Change the password for the local root account
+ALTER USER 'root'@'localhost' IDENTIFIED BY '12345';
+
+-- Refresh permissions to apply the change immediately
+FLUSH PRIVILEGES;
+
+And don't forget to create a db called converge_application with the given sql query
+
+
