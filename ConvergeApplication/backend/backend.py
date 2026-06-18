@@ -194,6 +194,45 @@ def is_application_complete(app_type, uploaded_docs):
         
     return False
 
+@app.route('/profile/<app_id>/document/<doc_id>', methods=['DELETE'])
+def delete_document(app_id, doc_id):
+    cursor = db.cursor(dictionary=True)
+    
+    try:
+        cursor.execute("SELECT app_type FROM applicant WHERE app_ID = %s", (app_id,))
+        applicant = cursor.fetchone()
+        
+        if not applicant:
+            return jsonify({"status": "error", "message": "Applicant not found"}), 404
+            
+        cursor.execute("SELECT doc_ID FROM applicants_documents WHERE app_ID = %s", (app_id,))
+        uploaded_doc_ids = [row['doc_ID'] for row in cursor.fetchall()]
+        
+        if is_application_complete(applicant['app_type'], uploaded_doc_ids):
+            return jsonify({"status": "error", "message": "Cannot delete documents: Application is already complete."}), 403
+
+        cursor.execute("SELECT doc_path FROM applicants_documents WHERE app_ID = %s AND doc_ID = %s", (app_id, doc_id))
+        doc_record = cursor.fetchone()
+        
+        if not doc_record:
+            return jsonify({"status": "error", "message": "Document not found in system."}), 404
+            
+        file_path = doc_record['doc_path']
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            
+        cursor.execute("DELETE FROM applicants_documents WHERE app_ID = %s AND doc_ID = %s", (app_id, doc_id))
+        db.commit()
+        
+        return jsonify({"status": "success", "message": "Document deleted successfully."}), 200
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({"status": "error", "message": f"Database error: {str(e)}"}), 500
+        
+    finally:
+        cursor.close()
+
 
 @app.route('/profile/<app_id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def profile(app_id):
@@ -308,7 +347,20 @@ def profile(app_id):
             if is_application_complete(applicant['app_type'], uploaded_doc_ids):
                 return jsonify({"status": "error", "message": "Cannot delete: Application is already complete."}), 403
                 
+            # --- NEW CODE: Delete child rows first ---
+            # 1. Delete associated documents from database (and optionally physical files here if needed)
+            cursor.execute("DELETE FROM applicants_documents WHERE app_ID = %s", (app_id,))
+            
+            # 2. Delete from specific applicant type tables
+            if applicant['app_type'] == 0:
+                cursor.execute("DELETE FROM residential_applicants WHERE app_ID = %s", (app_id,))
+            elif applicant['app_type'] == 1:
+                cursor.execute("DELETE FROM commercial_applicants WHERE app_ID = %s", (app_id,))
+                
+            # 3. Finally, delete the parent record
             cursor.execute("DELETE FROM applicant WHERE app_ID = %s", (app_id,))
+            # -----------------------------------------
+            
             db.commit()
             return jsonify({"status": "success", "message": "Application cancelled and deleted."}), 200
 

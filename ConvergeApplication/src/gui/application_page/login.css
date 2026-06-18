@@ -1,6 +1,6 @@
 :root {
     --converge-purple: #1A0D3F;
-    --converge-orange: #FF6B00;
+    --converge-orange: #6aa89c;
     --bg-gray: #F4F6F9;
     --text-dark: #333333;
     --border-color: #CCCCCC;
@@ -91,7 +91,7 @@ body {
 }
 
 .login button:hover {
-    background-color: #E05E00;
+    background-color: #588d82;
 }
 
 .login button:active {

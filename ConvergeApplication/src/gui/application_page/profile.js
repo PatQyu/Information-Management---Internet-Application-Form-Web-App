@@ -110,12 +110,29 @@ function fetchDashboardData() {
             const vaultList = document.getElementById("uploadedList");
             vaultList.innerHTML = ""; // Clear the "loading" text
 
+            // New code inside fetchDashboardData()
             if (data.uploaded_documents.length === 0) {
                 vaultList.innerHTML = `<li class="empty-state">No documents uploaded yet.</li>`;
             } else {
                 data.uploaded_documents.forEach(doc => {
                     const li = document.createElement("li");
-                    li.innerText = `${doc.doc_type}`;
+                    
+                    // Use flexbox via JS styles to align the text and button nicely
+                    li.style.display = "flex";
+                    li.style.justifyContent = "space-between";
+                    li.style.alignItems = "center";
+                    li.style.marginBottom = "8px"; 
+                    
+                    // If the app is complete, hide or disable the remove button
+                    const removeBtnHtml = isComplete 
+                        ? `<span style="font-size: 0.8rem; color: #ccc;">Locked</span>`
+                        : `<button onclick="deleteSingleDocument('${doc.doc_ID}')" style="color: #dc3545; background: none; border: none; cursor: pointer; text-decoration: underline; font-size: 0.85rem;">Remove</button>`;
+
+                    li.innerHTML = `
+                        <span>${doc.doc_type}</span>
+                        ${removeBtnHtml}
+                    `;
+                    
                     vaultList.appendChild(li);
                 });
             }
@@ -260,6 +277,36 @@ function setupEventListeners() {
         }
     });
 }
+
+// ==========================================
+// 5. DELETE SPECIFIC DOCUMENT
+// ==========================================
+window.deleteSingleDocument = function(docId) {
+    if (isComplete) {
+        alert("Action blocked: Your application is already complete and locked.");
+        return;
+    }
+
+    if (confirm("Are you sure you want to delete this document? You will need to upload it again.")) {
+        fetch(`http://127.0.0.1:5000/profile/${appId}/document/${docId}`, {
+            method: "DELETE"
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert(data.message);
+                // Re-fetch dashboard data to update the UI and recalculate completion status
+                fetchDashboardData(); 
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(err => {
+            console.error("Error deleting document:", err);
+            alert("Could not delete the document due to a network error.");
+        });
+    }
+};
 
 // ==========================================
 // 4. LOGOUT UTILITY
