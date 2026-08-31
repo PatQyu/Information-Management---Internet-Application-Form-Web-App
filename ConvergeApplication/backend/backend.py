@@ -19,8 +19,8 @@ def allowed_file(filename):
 db = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='DLq28@03LjpDQ2005!LjM',
-    database='converge_application'
+    password='',
+    database=''
 )
 
 #login
